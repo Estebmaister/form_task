@@ -1,7 +1,7 @@
 /*Form style*/
 
 .form-container form {
-  min-width: 500px;
+  width: auto;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -22,7 +22,8 @@ label {
   color: var(--color-primary);
 }
 
-input {
+input,
+select {
   -webkit-box-flex: 1;
   flex: 1 1 0;
   width: 100%;
