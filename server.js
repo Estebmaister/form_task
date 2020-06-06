@@ -103,7 +103,7 @@ app
           return next({ message: "Missing callback argument" });
         }
         res.json(data);
-        data.remove();
+        // data.remove();
       });
     });
   });
