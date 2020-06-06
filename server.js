@@ -141,7 +141,7 @@ app.route("/show_data_json").get((req, res, next) => {
       console.log("Missing `done()` argument");
       return next({ message: "Missing callback argument" });
     }
-    res.status(200).type("application/json").json(addr);
+    res.status(200).type("application/x-javascript").json(addr);
   });
 });
 
