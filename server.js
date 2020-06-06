@@ -39,7 +39,7 @@ app.get("/is-mongoose-ok", function (req, res) {
 
 // global setting for safety timeouts to handle possible
 // wrong callbacks that will never be called
-const timeout = 3000;
+const timeout = 10000;
 
 const Address = require("./app.js").AddressModel;
 
@@ -113,7 +113,7 @@ app.route("/show_data_xml").get((req, res, next) => {
   let t = setTimeout(() => {
     next({ message: "timeout" });
   }, timeout);
-  Address.find({}, "-_id", (err, addr) => {
+  Address.find({}, "-__v -_id", (err, addr) => {
     clearTimeout(t);
     if (err) return next(err);
     if (!addr) {
@@ -126,8 +126,7 @@ app.route("/show_data_xml").get((req, res, next) => {
       },
     };
     let xml = builder.create(rootXML).end({ pretty: true });
-    res.type("application/xml");
-    res.send(xml);
+    res.status(200).type("application/xml").send(xml);
   });
 });
 app.route("/show_data_json").get((req, res, next) => {
@@ -135,15 +134,14 @@ app.route("/show_data_json").get((req, res, next) => {
   let t = setTimeout(() => {
     next({ message: "timeout" });
   }, timeout);
-  Address.find({}, "-_id", (err, addr) => {
+  Address.find({}, "-__v -_id", (err, addr) => {
     clearTimeout(t);
     if (err) return next(err);
     if (!addr) {
       console.log("Missing `done()` argument");
       return next({ message: "Missing callback argument" });
     }
-    res.type("text/json");
-    res.json(addr);
+    res.status(200).type("application/json").json(addr);
   });
 });
 
@@ -189,12 +187,12 @@ app.get("/ip", (req, res) => {
   ip[3] ? res.json({ ip: ip[3] }) : res.json({ ip: ip[0] });
 });
 
-app.use(function (req, res, next) {
-  res.status(404).type("txt").send("Not Found in the server");
-});
+app.use((req, res, next) =>
+  res.status(404).type("txt").send("Not Found in the server")
+);
 
 // Error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if (err) {
     res
       .status(err.status || 500)
