@@ -1,0 +1,76 @@
+@import "littlecat.css";
+@import "form.css";
+
+/* Variables */
+
+:root {
+  --space-root: 1rem;
+  --space-xs: calc(var(--space-root) / 2);
+  --space-s: calc(var(--space-root) / 1.5);
+  --space-m: var(--space-root);
+  --space-l: calc(var(--space-root) * 1.5);
+  --space-xl: calc(var(--space-root) * 2);
+  --color-primary: rgb(128, 128, 128);
+  --color-secondary: rgb(245, 198, 46);
+  --color-tertiary: #222;
+  --color-contrast: rgb(224, 224, 224);
+  --base-border-radius: 0.25rem;
+  --ease: cubic-bezier(0.075, 0.82, 0.165, 1);
+  --duration: 350ms;
+  --font-family: "Roboto", sans-serif;
+  --font-size: 1.2rem;
+}
+
+/* Structure */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  height: 100vh;
+  color: var(--color-tertiary);
+  padding: var(--space-m);
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  line-height: 1.2;
+  background-color: var(--color-contrast);
+}
+
+header {
+  text-align: center;
+}
+h1 {
+  font-weight: 700;
+  font-size: calc(var(--font-size) * 2.5);
+}
+a {
+  text-decoration: none;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: bold;
+  text-align: center;
+}
+a:focus {
+  color: var(--color-secondary);
+}
+a:hover {
+  color: var(--color-secondary);
+}
+
+/* Arrow effect in links */
+a:hover + .arrow {
+  opacity: 1;
+  transform: none;
+}
+.arrow {
+  display: inline-block;
+  opacity: 0;
+  margin-left: 0.125rem;
+  transform: translateX(-0.375rem);
+  transition: all var(--duration) ease-out;
+}

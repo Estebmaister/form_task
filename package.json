@@ -1,0 +1,38 @@
+{
+  "name": "form_task",
+  "version": "0.1.0",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.4",
+    "dotenv": "^8.2.0",
+    "mongodb": "^3.5.7",
+    "mongoose": "^5.9.13"
+  },
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "local": "node server"
+  },
+  "engines": {
+    "node": "4.4.5"
+  },
+  "description": "Created for complete a required task",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Estebmaister/form_mongo.git"
+  },
+  "author": "Esteban Camargo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Estebmaister/form_mongo/issues"
+  },
+  "homepage": "https://github.com/Estebmaister/form_mongo#readme",
+  "keywords": [
+    "form",
+    "node",
+    "express",
+    "backend",
+    "mongo"
+  ]
+}
