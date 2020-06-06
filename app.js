@@ -42,14 +42,14 @@ const Address = mongoose.model("Address", adrSchema);
 
 const createAndSaveAddress = (done) => {
   let estebAdr = new Address({
-    fullName: "Esteban camargo",
-    address: "Av. Bolivia, Urb. Los Caobos Sur, Edif. Terepaima",
-    address_cont: "Cra. 17a",
-    city: "LIBERTADOR",
-    state: "DISTRITO CAPITAL",
-    zip: "01010",
-    tel: "04169312768",
-    country: "Venezuela",
+    fullName: "Ejemplo de nombre",
+    address: "Dirección inicial",
+    address_cont: "Dirección final",
+    city: "Ciudad Bogotá",
+    state: "Estado DC",
+    zip: "110111",
+    tel: "3057772628",
+    country: "Colombia",
   });
 
   estebAdr.save((err, data) => {

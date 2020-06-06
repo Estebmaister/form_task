@@ -42,6 +42,7 @@ input:focus {
   cursor: pointer;
   border: 2px solid transparent;
   border-radius: var(--base-border-radius);
+  height: auto;
 }
 
 .btn--primary {

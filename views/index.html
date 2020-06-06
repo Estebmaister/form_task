@@ -34,7 +34,7 @@
     </header>
     <main>
       <section class="form-container">
-        <form action="/find-all-by-name" method="POST">
+        <form action="/create-and-save-address" method="POST">
           <h3>Add a new address</h3>
           <!-- <label for="fName"><i class="fa fa-user"></i> Full Name</label> -->
           <input
@@ -94,37 +94,32 @@
           <input class="btn btn--primary" type="submit" value="Save" />
           <br />
           <!-- <label><input type="checkbox" checked="checked" name="sameadr" />Shipping address same as billing</label> -->
-          <input
-            class="btn btn--secondary"
-            type="reset"
-            formaction="/show_data"
-            value="Export XML"
-          />
-          <input
-            class="btn btn--secondary"
-            type="submit"
-            value="Find all"
-            formaction="/find-all-by-name"
-          />
+          <a href="./show_data_xml" target="_blank" class="btn btn--secondary"
+            >Export XML</a
+          >
+          <a href="./show_data_json" target="_blank" class="btn btn--secondary"
+            >Export XML</a
+          >
+          <!-- <input class="btn btn--secondary" type="submit" value="Find all" formaction="/find_all_by_name" /> -->
         </form>
       </section>
     </main>
 
-    <footer>
+    <!-- <footer>
       <p>
-        <a href="https://glitch.com/~node-esteb">
+        <a href="https://glitch.com/~form-esteb">
           Remix this in HyperDev
         </a>
         <span class="arrow">➡️</span>
       </p>
       <p>
-        <a href="https://github.com/Estebmaister/boilerplate-express">
+        <a href="https://github.com/Estebmaister/form_task">
           Clone this in GitHub
         </a>
         <span class="arrow">➡️</span>
       </p>
-    </footer>
-    <aside>
+    </footer> -->
+    <!-- <aside>
       <svg
         class="cat"
         viewBox="0 0 493 470"
@@ -215,6 +210,6 @@
         ></path>
       </svg>
     </aside>
-    <script src="./js/index.js"></script>
+    <script src="./js/index.js"></script> -->
   </body>
 </html>

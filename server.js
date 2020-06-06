@@ -1,11 +1,11 @@
 const express = require("express");
-// const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
+const builder = require("xmlbuilder");
 
-// const myApp = require("./myApp");
-const app = require("./myApp").app;
+// const app = require("./app");
+const app = require("./app").app;
 
 app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "views", "index.html"))
@@ -41,7 +41,7 @@ app.get("/is-mongoose-ok", function (req, res) {
 // wrong callbacks that will never be called
 const timeout = 3000;
 
-const Address = require("./myApp.js").AddressModel;
+const Address = require("./app.js").AddressModel;
 
 app.use(function (req, res, next) {
   if (req.method !== "OPTIONS" && Address.modelName !== "Address") {
@@ -58,43 +58,105 @@ app.post("/mongoose-model", function (req, res, next) {
   res.json(p);
 });
 
-const createAddress = require("./myApp.js").createAndSaveAddress;
+const createAddress = require("./app.js").createAndSaveAddress;
 
-app.get("/create-and-save-address", function (req, res, next) {
+app
+  .route("/create_and_save_address")
+  .get((req, res, next) => {
+    // in case of incorrect function use wait timeout then respond
+    let t = setTimeout(() => {
+      next({ message: "timeout" });
+    }, timeout);
+    createAddress(function (err, data) {
+      clearTimeout(t);
+      if (err) {
+        return next(err);
+      }
+      if (!data) {
+        console.log("Missing `done()` argument");
+        return next({ message: "Missing callback argument" });
+      }
+      Address.findById(data._id, (err, addr) => {
+        if (err) {
+          return next(err);
+        }
+        res.json(addr);
+        addr.remove();
+      });
+    });
+  })
+  .post((req, res, next) => {
+    let t = setTimeout(() => {
+      next({ message: "timeout" });
+    }, timeout);
+    Address.create(req.body, (err, addr) => {
+      if (err) {
+        return next(err);
+      }
+      Address.findById(addr._id, (err, data) => {
+        clearTimeout(t);
+        if (err) {
+          return next(err);
+        }
+        if (!data) {
+          console.log("Missing `done()` argument");
+          return next({ message: "Missing callback argument" });
+        }
+        res.json(data);
+        data.remove();
+      });
+    });
+  });
+
+app.route("/show_data_xml").get((req, res, next) => {
   // in case of incorrect function use wait timeout then respond
   let t = setTimeout(() => {
     next({ message: "timeout" });
   }, timeout);
-  createAddress(function (err, data) {
+  Address.find({}, "-_id", (err, addr) => {
     clearTimeout(t);
-    if (err) {
-      return next(err);
-    }
-    if (!data) {
+    if (err) return next(err);
+    if (!addr) {
       console.log("Missing `done()` argument");
       return next({ message: "Missing callback argument" });
     }
-    Address.findById(data._id, function (err, pers) {
-      if (err) {
-        return next(err);
-      }
-      res.json(pers);
-      // pers.remove();
-    });
+    let rootXML = {
+      addresses: {
+        address: JSON.parse(JSON.stringify(addr)),
+      },
+    };
+    let xml = builder.create(rootXML).end({ pretty: true });
+    res.type("application/xml");
+    res.send(xml);
   });
 });
-
-const findByName = require("./myApp.js").findAddressByName;
-
-app.post("/find-all-by-name", function (req, res, next) {
+app.route("/show_data_json").get((req, res, next) => {
+  // in case of incorrect function use wait timeout then respond
   let t = setTimeout(() => {
     next({ message: "timeout" });
   }, timeout);
-  Address.create(req.body, function (err, adr) {
+  Address.find({}, "-_id", (err, addr) => {
+    clearTimeout(t);
+    if (err) return next(err);
+    if (!addr) {
+      console.log("Missing `done()` argument");
+      return next({ message: "Missing callback argument" });
+    }
+    res.json(addr);
+  });
+});
+
+const findByName = require("./app.js").findAddressByName;
+
+app.post("/find_all_by_name", (req, res, next) => {
+  let t = setTimeout(() => {
+    next({ message: "timeout" });
+  }, timeout);
+  Address.create(req.body, (err, addr) => {
     if (err) {
       return next(err);
     }
-    findByName(adr.fullName, function (err, data) {
+    findByName(addr.fullName, (err, data) => {
       clearTimeout(t);
       if (err) {
         return next(err);
