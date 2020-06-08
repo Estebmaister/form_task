@@ -53,7 +53,7 @@ const createAndSaveAddress = (done) => {
   });
 
   estebAdr.save((err, data) => {
-    if (err) return console.error(err);
+    if (err) return done(err);
     done(null, data);
   });
 };
@@ -62,34 +62,32 @@ const createAndSaveAddress = (done) => {
 /*  ========================= */
 /** Use `Model.find()` */
 
-const findAddressByName = function (addressName, done) {
-  Address.find({ fullName: addressName }, function (err, addressFound) {
-    if (err) return console.log(err);
-    done(null, addressFound);
+const findAddressesByName = (addressesName, done) => {
+  Address.find({ fullName: addressesName }, (err, addressesFound) => {
+    if (err) return done(err);
+    done(null, addressesFound);
   });
 };
 
 /* Send data to client --date-- */
 app.get(
   "/now",
-  function (req, res, next) {
+  (req, res, next) => {
     req.time = new Date().toString();
     next();
   },
-  function (req, res) {
+  (req, res) => {
     res.json({ time: req.time });
   }
 );
 
 /** Get input from client - Route parameters */
-
 app.get("/:word/echo", (req, res) => res.json({ echo: req.params.word }));
 
-/** Get input from client - Query parameters */
+/** Get input from client - Query parameters or POST body*/
 // /name?first=<firstname>&last=<lastname>
-/** Get data form POST  */
 app
-  .route("/form")
+  .route("/form_check")
   .get((req, res) => res.json({ name: `${req.query.first} ${req.query.last}` }))
   .post((req, res) =>
     res.json({
@@ -107,4 +105,4 @@ app
 exports.app = app;
 exports.AddressModel = Address;
 exports.createAndSaveAddress = createAndSaveAddress;
-exports.findAddressByName = findAddressByName;
+exports.findAddressesByName = findAddressesByName;

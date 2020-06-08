@@ -13,35 +13,15 @@ app.get("/", (req, res) =>
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// ______ ROUTER FUNCTIONS ________ //
-
-app.get("/file/*?", function (req, res, next) {
-  if (req.params[0] === ".env") {
-    return next({ status: 401, message: "ACCESS DENIED" });
-  }
-  fs.readFile(path.join(__dirname, req.params[0]), function (err, data) {
-    if (err) {
-      return next(err);
-    }
-    res.type("txt").send(data.toString());
-  });
-});
-
-app.get("/is-mongoose-ok", function (req, res) {
-  if (mongoose) {
-    res.json({ isMongooseOk: !!mongoose.connection.readyState });
-  } else {
-    res.json({ isMongooseOk: false });
-  }
-});
-
 // ______ DB FUNCTIONS (Testing, Create, Read)________ //
 
 // global setting for safety timeouts to handle possible
 // wrong callbacks that will never be called
 const timeout = 10000;
-
 const Address = require("./app.js").AddressModel;
+const createAndSaveAddress = require("./app.js").createAndSaveAddress;
+// const findByName = require("./app.js").findAddressesByName;
+// findByName(addr.fullName, (err,data) => {})
 
 app.use((req, res, next) => {
   if (req.method !== "OPTIONS" && Address.modelName !== "Address")
@@ -49,29 +29,11 @@ app.use((req, res, next) => {
   next();
 });
 
-const createAndSaveAddress = require("./app.js").createAndSaveAddress;
-
 app
   .route("/create_address")
-  .get((req, res, next) => {
-    // in case of incorrect function use wait timeout then respond
-    const tCheck = setTimeout(() => {
-      next({ message: "timeout" });
-    }, timeout);
-    createAndSaveAddress((err, data) => {
-      clearTimeout(tCheck);
-      if (err) return next(err);
-      if (!data) {
-        console.log("No data is retrieved");
-        return next({ message: "The DB didn't retrieve any data" });
-      }
-      Address.findById(data._id, (err, addr) => {
-        if (err) return next(err);
-        res.json(addr);
-        addr.remove();
-      });
-    });
-  })
+  .get((req, res, next) =>
+    next({ message: "You should use method POST not GET" })
+  )
   .post((req, res, next) => {
     const tCheck = setTimeout(() => {
       next({ message: "timeout" });
@@ -88,12 +50,11 @@ app
           return next({ message: "The DB didn't retrieve any data" });
         }
         res.json(data);
-        // data.remove();
       });
     });
   });
 
-app.route("/show_data_xml").get((req, res, next) => {
+app.get("/show_data_xml", (req, res, next) => {
   // in case of incorrect function use wait timeout then respond
   const tCheck = setTimeout(() => {
     next({ message: "timeout" });
@@ -115,7 +76,7 @@ app.route("/show_data_xml").get((req, res, next) => {
   });
 });
 
-app.route("/show_data_json").get((req, res, next) => {
+app.get("/show_data_json", (req, res, next) => {
   // in case of incorrect function use wait timeout then respond
   const tCheck = setTimeout(() => {
     next({ message: "timeout" });
@@ -131,8 +92,7 @@ app.route("/show_data_json").get((req, res, next) => {
   });
 });
 
-// const findByName = require("./app.js").findAddressByName;
-// findByName(addr.fullName, (err,data) => {})
+// ______ TESTING FUNCTIONS ________ //
 
 app
   .route("/check")
@@ -166,6 +126,28 @@ app
       });
     });
   });
+
+// ______ ROUTER FUNCTIONS ________ //
+
+app.get("/file/*?", function (req, res, next) {
+  if (req.params[0] === ".env") {
+    return next({ status: 401, message: "ACCESS DENIED" });
+  }
+  fs.readFile(path.join(__dirname, req.params[0]), function (err, data) {
+    if (err) {
+      return next(err);
+    }
+    res.type("txt").send(data.toString());
+  });
+});
+
+app.get("/is-mongoose-ok", function (req, res) {
+  if (mongoose) {
+    res.json({ isMongooseOk: !!mongoose.connection.readyState });
+  } else {
+    res.json({ isMongooseOk: false });
+  }
+});
 
 // ______ EXTRA FUNCTIONS (mongoose_model, package.json, ip, 500, 404)________ //
 
