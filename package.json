@@ -7,7 +7,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.22.1",
     "mongodb": "^3.7.4",
-    "mongoose": "^8.9.5",
+    "mongoose": "^8.22.1",
     "xmlbuilder": "^15.1.1"
   },
   "main": "server.js",
